@@ -1,18 +1,18 @@
 // Define color sensor pins
-#define S0 4
-#define S1 5
-#define S2 6
-#define S3 7
-#define sensorOut 8
+#define S0 9
+#define S1 10
+#define S2 11
+#define S3 12
+#define sensorOut 3
 
 // Calibration Values
 // *Get these from Calibration Sketch
-int redMin = 16; // Red minimum value
-int redMax = 171; // Red maximum value
-int greenMin = 17; // Green minimum value
-int greenMax = 167; // Green maximum value
-int blueMin = 13; // Blue minimum value
-int blueMax = 123; // Blue maximum value
+int redMin = 24; // Red minimum value
+int redMax = 273; // Red maximum value
+int greenMin = 23; // Green minimum value
+int greenMax = 270; // Green maximum value
+int blueMin = 18; // Blue minimum value
+int blueMax = 200; // Blue maximum value
 
 // Variables for Color Pulse Width Measurements
 int redPW = 0;

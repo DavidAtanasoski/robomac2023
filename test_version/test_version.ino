@@ -35,50 +35,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-void setSpeedMotorA(int speed)
-{
-  analogWrite(enableMotorA, speed); // speed > 80
-}
-
-void setSpeedMotorB(int speed)
-{
-  analogWrite(enableMotorB, speed); // speed > 80
-}
-
-void motorAStraigth()
-{
-  digitalWrite(motorAIn1, LOW);
-  digitalWrite(motorAIn2, HIGH);
-}
-
-void motorABack()
-{
-  digitalWrite(motorAIn1, HIGH);
-  digitalWrite(motorAIn2, LOW);
-}
-
-void motorBStraigth()
-{
-  digitalWrite(motorBIn1, LOW);
-  digitalWrite(motorBIn2, HIGH);
-}
-
-void motorBBack()
-{
-  digitalWrite(motorBIn1, HIGH);
-  digitalWrite(motorBIn2, LOW);
-}
-
-void motorAStop() {
-  digitalWrite(motorAIn1, LOW);
-  digitalWrite(motorAIn2, LOW);
-}
-
-void motorBStop() {
-  digitalWrite(motorBIn1, LOW);
-  digitalWrite(motorBIn2, LOW);
-}
-
+// Methods for reading IR sensors data
 double readLeftIR() {
   double leftsensorRead = analogRead(leftIR);
   return leftsensorRead;
@@ -94,23 +51,169 @@ double readRightIR() {
   return rightsensorRead;
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  // motorAstraight();
-  // motorBStraigth();
+void setSpeedMotorA(int speed)
+{
+  analogWrite(enableMotorA, speed); // speed > 80
+}
 
-  // delay(500);
-  // motorAStop();
-  // motorBStop();
+void setSpeedMotorB(int speed)
+{
+  analogWrite(enableMotorB, speed); // speed > 80
+}
+
+void motorAStraigth()
+{
+  digitalWrite(motorAIn1, HIGH);
+  digitalWrite(motorAIn2, LOW);
+}
+
+void motorABack()
+{
+  digitalWrite(motorAIn1, LOW);
+  digitalWrite(motorAIn2, HIGH);
+}
+
+void motorBStraigth()
+{
+  digitalWrite(motorBIn1, HIGH);
+  digitalWrite(motorBIn2, LOW);
+}
+
+void motorBBack()
+{
+  digitalWrite(motorBIn1, LOW);
+  digitalWrite(motorBIn2, HIGH);
+}
+
+void motorAStop() {
+  digitalWrite(motorAIn1, LOW);
+  digitalWrite(motorAIn2, LOW);
+}
+
+void motorBStop() {
+  digitalWrite(motorBIn1, LOW);
+  digitalWrite(motorBIn2, LOW);
+}
+
+void printSensorData()
+{
   Serial.print("LeftIR: ");
-  Serial.print(readLeftIR());
+  Serial.print(discretize(readLeftIR()));
 
   Serial.print(" MidIR: ");
-  Serial.print(readMiddleIR());
+  Serial.print(discretize(readMiddleIR()));
 
   Serial.print(" RightIR: ");
-  Serial.println(readRightIR());
+  Serial.println(discretize(readRightIR()));
+}
 
-  delay(500);
+int discretize(int val)
+{
+  if (val > 300) 
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+void turnRight() 
+{
+  motorABack();
+  motorBStraigth(); 
+  setSpeedMotorA(255); // -speed
+  setSpeedMotorB(255); // (+speed)
+}
+
+void turnLeft() 
+{
+  motorAStraigth();
+  motorBBack(); 
+  setSpeedMotorA(255); // +speed
+  setSpeedMotorB(255); // (-speed)
+}
+
+void setSpeed(int speed)
+{  
+  setSpeedMotorA(speed);
+  setSpeedMotorB(speed);
+}
+
+void carStop()
+{
+  motorAStop();
+  motorBStop();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  int leftSensorData = discretize(readLeftIR());
+  int midSensorData = discretize(readMiddleIR());
+  int rightSensorData = discretize(readRightIR());
+
+  printSensorData();
+  
+  // setSpeed(150);
+
+  // if(leftSensorData == 0 && midSensorData == 1 && rightSensorData == 0)
+  // {
+  //   motorAStraigth();
+  //   motorBStraigth();
+  // }
+  // else if((leftSensorData == 1 && midSensorData == 0 && rightSensorData == 0) || (leftSensorData == 1 && midSensorData == 1 && rightSensorData == 0))
+  // {
+  //   // motor 1 nazad
+  //   setSpeedMotorA(100);
+  //   digitalWrite(motorAIn1, LOW);
+  //   digitalWrite(motorAIn2, HIGH); 
+
+  //   // motor 2 napred
+  //   setSpeedMotorB(150);
+  //   digitalWrite(motorBIn1, HIGH);
+  //   digitalWrite(motorBIn2, LOW); 
+  // }
+  // else if((leftSensorData == 0 && midSensorData == 0 && rightSensorData == 1) || (leftSensorData == 0 && midSensorData == 1 && rightSensorData == 1))
+  // {
+  //   setSpeedMotorA(150);
+  //   digitalWrite(motorAIn1, HIGH);
+  //   digitalWrite(motorAIn2, LOW); 
+
+  //   // motor 2 napred
+  //   setSpeedMotorB(100);
+  //   digitalWrite(motorBIn1, LOW);
+  //   digitalWrite(motorBIn2, HIGH); 
+  // } 
+
+  // }
+
+  if (midSensorData == 1 && leftSensorData == 0 && rightSensorData == 0)
+  {
+    motorAStraigth();
+    motorBStraigth();
+    return;
+  }
+  else if (leftSensorData == 1 && midSensorData == 0 && rightSensorData == 0)
+  {
+    carStop();
+    turnLeft();
+  }
+  else if (rightSensorData == 1 && midSensorData == 0 && leftSensorData == 0)
+  {
+    carStop();
+    turnRight();
+  }
+  else 
+  {
+    carStop();
+  }
+
+  // setSpeedMotorA(100);
+  // setSpeedMotorB(200);
+
+  // motorAStraigth();
+  // motorBStraigth();
 }
 
