@@ -20,9 +20,9 @@
 #define motorBIn1 8 // right
 #define motorBIn2 7
 
-#define leftIR 14 // A0 pin
-#define middleIR 15 // A1 pin
-#define rightIR A5 // 19-A5 pin
+#define leftIR A5 // A0 pin
+#define middleIR A3 // A1 pin
+#define rightIR A4 // 19-A5 pin
 
 void setup() {
   pinMode(enableMotorA, OUTPUT);
@@ -102,7 +102,15 @@ void loop() {
   // delay(500);
   // motorAStop();
   // motorBStop();
-  Serial.print(readRightIR());
+  Serial.print("LeftIR: ");
+  Serial.print(readLeftIR());
+
+  Serial.print(" MidIR: ");
+  Serial.print(readMiddleIR());
+
+  Serial.print(" RightIR: ");
+  Serial.println(readRightIR());
+
   delay(500);
 }
 
