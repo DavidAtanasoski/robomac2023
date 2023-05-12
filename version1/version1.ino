@@ -1,10 +1,3 @@
-// Define color sensor pins
-#define S0 9
-#define S1 10
-#define S2 11
-#define S3 12
-#define sensorOut 3
-
 // Motor Enable pins
 #define enableMotorA 5
 #define enableMotorB 6
@@ -24,26 +17,8 @@
 #define rightIR A4 // 19-A5 pin
 
 // Motor variables
-int turnSpeed = 20;
+int turnSpeed = 10;
 int motorSpeed = 255;
-
-// Calibration Values
-int redMin = 24; // Red minimum value
-int redMax = 273; // Red maximum value
-int greenMin = 23; // Green minimum value
-int greenMax = 270; // Green maximum value
-int blueMin = 18; // Blue minimum value
-int blueMax = 200; // Blue maximum value
-
-// Variables for Color Pulse Width Measurements
-int redPW = 0;
-int greenPW = 0;
-int bluePW = 0;
-
-// Variables for final Color values
-int redValue;
-int greenValue;
-int blueValue;
 
 void setup() {
   
@@ -54,20 +29,6 @@ void setup() {
   pinMode(motorAIn2, OUTPUT);
   pinMode(motorBIn1, OUTPUT);
   pinMode(motorBIn2, OUTPUT);
-
-  // Color Sensor pinMode	
-  // Set S0 - S3 as outputs
-	pinMode(S0, OUTPUT);
-	pinMode(S1, OUTPUT);
-	pinMode(S2, OUTPUT);
-	pinMode(S3, OUTPUT);
-
-  // Set Sensor output as input
-	pinMode(sensorOut, INPUT);
-
-	// Set Frequency scaling to 20%
-	digitalWrite(S0,HIGH);
-	digitalWrite(S1,LOW);
 
   Serial.begin(9600);
 }
@@ -106,49 +67,17 @@ void loop() {
   }
 }
 
+//
 // Methods:
+//
 
-
-
-
-
-// Function to read Red Pulse Widths
-int getRedPW() {
-	// Set sensor to read Red only
-	digitalWrite(S2,LOW);
-	digitalWrite(S3,LOW);
-	// Define integer to represent Pulse Width
-	int PW;
-	// Read the output Pulse Width
-	PW = pulseIn(sensorOut, LOW);
-	// Return the value
-	return PW;
-}
-
-// Function to read Green Pulse Widths
-int getGreenPW() {
-	// Set sensor to read Green only
-	digitalWrite(S2,HIGH);
-	digitalWrite(S3,HIGH);
-	// Define integer to represent Pulse Width
-	int PW;
-	// Read the output Pulse Width
-	PW = pulseIn(sensorOut, LOW);
-	// Return the value
-	return PW;
-}
-
-// Function to read Blue Pulse Widths
-int getBluePW() {
-	// Set sensor to read Blue only
-	digitalWrite(S2,LOW);
-	digitalWrite(S3,HIGH);
-	// Define integer to represent Pulse Width
-	int PW;
-	// Read the output Pulse Width
-	PW = pulseIn(sensorOut, LOW);
-	// Return the value
-	return PW;
+void stopCar()
+{
+  setCarSpeed(0);
+  digitalWrite(motorAIn1, LOW);
+  digitalWrite(motorAIn2, LOW);
+  digitalWrite(motorBIn1, LOW);
+  digitalWrite(motorBIn1, LOW);
 }
 
 void setMotorSpeedA(int speed)
