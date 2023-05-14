@@ -17,7 +17,7 @@
 #define rightIR A4 // 19-A5 pin
 
 // Motor variables
-int turnSpeed = 10;
+int turnSpeed = 0;
 int motorSpeed = 255;
 
 // Color sensor variables
@@ -126,6 +126,13 @@ void loop() {
 	// Delay to stabilize sensor
 	delay(10);
 
+  Serial.print("GREEN COUNT: ");
+  Serial.print(countGreen);
+  Serial.print(" RED: ");
+  Serial.print(redValue);
+  Serial.print(" GREEN: ");
+  Serial.println(greenValue);
+
   int currentColorState = getCurrentColorState(redValue, greenValue);
   Serial.println(currentColorState);
 
@@ -133,6 +140,10 @@ void loop() {
   {
     digitalWrite(13, LOW);
     countGreen++;
+    Serial.print("GREEN: ");
+    Serial.print(countGreen);
+    Serial.print(" STATE: ");
+    Serial.println(currentColorState);
   }
   else if(currentColorState == 2 && countGreen == 2)
   {
@@ -144,11 +155,17 @@ void loop() {
       digitalWrite(motorBIn1, LOW);
       digitalWrite(motorBIn1, LOW);
     }
+
+    //Serial.println("STOJ BE");
+    //setCarSpeed(0);
+    // stopCar();
   }
   else if(currentColorState == 2 && countGreen < 2)
   {
     digitalWrite(13, HIGH);
     countGreen = 0;
+    // digitalWrite(13, HIGH);
+    // delay(250);
   }
 
   prevColorState = currentColorState;
